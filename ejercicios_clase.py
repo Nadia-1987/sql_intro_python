@@ -127,20 +127,30 @@ def search_by_grade(grade):
 
     c.execute('SELECT * FROM secundaria')
 
-    for row in c.execute ('SELECT * FROM secundaria'):
-        if row[grade] == grade:
-            print(row[0], row[1], row[2])
+    for row in c.execute ('SELECT * FROM secundaria WHERE grade = ?', [grade]):
+        print(row[0], row[1], row[2])
             
-        else:
-            pass
-
+        
     conn.close()
 
 
-def insert():
+def insert(name, age, grade, tutor):
     print('Nuevos ingresos!')
     # Utilizar la sentencia INSERT para ingresar nuevos estudiantes
     # a la secundaria
+
+    conn = sqlite3.connect('secundaria.db')
+    c = conn.cursor()
+
+    values = [name, age, grade, tutor]
+
+    c.execute("""
+        INSERT INTO secundaria (name, age, grade, tutor)
+        VALUES (?,?,?,?);""", values)
+
+    conn.commit()
+    # Cerrar la conexión con la base de datos
+    conn.close()
 
     
 
@@ -167,8 +177,7 @@ def modify(id, name):
 if __name__ == '__main__':
     print("Bienvenidos a otra clase de Inove con Python")
     create_schema()   # create and reset database (DB)
-    # fill()
-
+    #fill()
     fill('Juan', 12, 1, 'Pablo')
     fill('Nadia', 29, 2,)
     fill('Marcos', 35,'Daniel')
@@ -181,7 +190,7 @@ if __name__ == '__main__':
     search_by_grade(grade)
 
     
-    fill('Angel', 5, 7, 'Roque')
+    insert('Angel', 5, 7, 'Roque')
     
 
     name = '¿Inove?'
